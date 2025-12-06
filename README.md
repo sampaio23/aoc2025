@@ -10,6 +10,6 @@ Go into one of the folders, compile with `rustc` and run it:
 
 ```sh
 cd 01/
-rustc part1.rs
-./part1
+rustc 01.rs
+./01
 ```
