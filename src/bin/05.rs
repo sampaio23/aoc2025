@@ -29,9 +29,87 @@ fn part1(s: &String) -> u32 {
     return count;
 }
 
-fn part2(s: &String) -> u32 {
-    todo!();
-}
+fn part2(s: &String) -> u64 {
+    let mut fresh: Vec<(u64, u64)> = Vec::new();
+
+    for line in s.lines() {
+        if line.trim().is_empty() {
+            break;
+        }
+        
+        let limits: Vec<&str> = line.split('-').collect();
+        let l1: u64 = limits[0].trim().parse::<u64>().unwrap();
+        let h1: u64 = limits[1].trim().parse::<u64>().unwrap();
+
+        fresh.push((l1, h1));
+    }
+
+    loop {
+        let mut changed: bool = false;
+
+        for i in 0..fresh.len() {
+            for j in (i+1)..fresh.len() {
+                let l1 = fresh.get(i).unwrap().0;
+                let h1 = fresh.get(i).unwrap().1;
+                let l2 = fresh.get(j).unwrap().0;
+                let h2 = fresh.get(j).unwrap().1;
+
+                if h1 >= h2 && l1 <= l2 {
+                    fresh.remove(j);
+                    changed = true;
+                    break;
+                }
+
+                if h1 <= h2 && l1 >= l2 {
+                    fresh.remove(i);
+                    changed = true;
+                    break;
+                }
+
+                if h1 >= h2 && l1 >= l2 && h2 >= l1 {
+                    if i < j {
+                        fresh.remove(j);
+                        fresh.remove(i);
+                    } else {
+                        fresh.remove(i);
+                        fresh.remove(j);
+                    }
+                    fresh.push((l2, h1));
+                    changed = true;
+                    break;
+                }
+
+                if h1 <= h2 && l1 <= l2 && h1 >= l2 {
+                    if i < j {
+                        fresh.remove(j);
+                        fresh.remove(i);
+                    } else {
+                        fresh.remove(i);
+                        fresh.remove(j);
+                    }
+                    fresh.push((l1, h2));
+                    changed = true;
+                    break;
+                }
+            }
+
+            if changed {
+                break;
+            }
+        }
+
+        if !changed {
+            break;
+        }
+    }
+
+    let mut count: u64 = 0;
+    for intervals in fresh {
+        count += intervals.1 - intervals.0 + 1;
+    }
+ 
+    return count;
+}   
 
 fn main() {
     let example: String = fs::read_to_string("05/example").unwrap();
