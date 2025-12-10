@@ -54,8 +54,8 @@ fn part2(s: &String) -> u32 {
 }
 
 fn main() {
-    let example: String = fs::read_to_string("example").unwrap();
-    let input: String = fs::read_to_string("input").unwrap();
+    let example: String = fs::read_to_string("01/example").unwrap();
+    let input: String = fs::read_to_string("01/input").unwrap();
 
     println!("Part 1\n======");
     println!("    Example: {}", part1(&example));
