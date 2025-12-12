@@ -51,8 +51,66 @@ fn part1(s: &String) -> u64 {
     return results.iter().sum::<u64>();
 }
 
-fn part2(s: &String) -> u32 {
-    todo!();
+fn part2(s: &String) -> u64 {
+    let mut matrix: Vec<Vec<char>> = Vec::new();
+
+    for index in 0..s.lines().count() {
+        let line = s.lines().nth(index).unwrap();
+        let mut i = 0;
+        for c in line.chars() {
+            if index == 0 {
+                let mut v: Vec<char> = Vec::new();
+                v.push(c);
+                matrix.push(v);
+            } else {
+                matrix.get_mut(i).unwrap().push(c);
+                i += 1;
+            }
+        }
+    }
+
+    let width = matrix.len();
+    let height = matrix[0].len();
+
+    let mut result: Vec<u64> = Vec::new();
+    let mut current: Vec<u64> = Vec::new();
+    let mut current_num: Vec<u64> = Vec::new();
+    for i in 0..width {
+        for j in 0..height {
+            let cur = matrix[width-1-i][j];
+            if cur == '*' {
+                let mut cur_num = 0;
+                for num in &current_num {
+                    cur_num = cur_num * 10 + num;
+                }
+                current.push(cur_num);
+                current_num.clear();
+                result.push(current.iter().product::<u64>());
+                current.clear();
+            } else if cur == '+' {
+                let mut cur_num = 0;
+                for num in &current_num {
+                    cur_num = cur_num * 10 + num;
+                }
+                current.push(cur_num);
+                current_num.clear();
+                result.push(current.iter().sum::<u64>());
+                current.clear();
+            } else if cur != ' ' {
+                current_num.push(cur.to_digit(10).unwrap() as u64);
+            }
+        }
+        let mut cur_num = 0;
+        if current_num.len() > 0 {
+            for num in &current_num {
+                cur_num = cur_num * 10 + num;
+            }
+            current.push(cur_num);
+            current_num.clear();
+        }
+    }
+
+    return result.iter().sum::<u64>();
 }
 
 fn main() {
